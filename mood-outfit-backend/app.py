@@ -4,6 +4,10 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+@app.route('/', methods=['GET'])
+def home():
+    return jsonify({"message": "Outfit Mood Matcher API is running!", "endpoints": ["/recommend"]})
+
 @app.route('/recommend', methods=['POST'])
 def recommend():
     data = request.get_json()
