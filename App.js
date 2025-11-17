@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, FlatList, Image, Platform } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import LoginScreen from './LoginScreen';
+import SignupScreen from './SignupScreen';
 
 export default function App() {
+  const [user, setUser] = useState(null);
+  const [screen, setScreen] = useState('login'); // 'login', 'signup', 'main'
   const [mood, setMood] = useState(1);
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -27,9 +31,29 @@ export default function App() {
     setLoading(false);
   };
 
+  if (!user) {
+    if (screen === 'signup') {
+      return (
+        <SignupScreen 
+          onSignup={setUser}
+          onSwitchToLogin={() => setScreen('login')}
+        />
+      );
+    }
+    return (
+      <LoginScreen 
+        onLogin={setUser}
+        onSwitchToSignup={() => setScreen('signup')}
+      />
+    );
+  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Mood-based Outfit Recommender</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>Mood-based Outfit Recommender</Text>
+        <Button title="Logout" onPress={() => setUser(null)} />
+      </View>
 
       <Picker selectedValue={mood} onValueChange={(val) => setMood(val)}>
         <Picker.Item label="Energetic" value={1} />
@@ -59,7 +83,8 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: { padding: 20, marginTop: 50 },
-  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 20 },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
+  title: { fontSize: 22, fontWeight: 'bold' },
   card: { backgroundColor: '#eee', padding: 10, borderRadius: 10, marginVertical: 10 },
   cardTitle: { fontSize: 18, fontWeight: 'bold' },
   image: { width: '100%', height: 150, borderRadius: 8 }
