@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, Platform } from 'react-native';
 
 export default function LoginScreen({ onLogin, onSwitchToSignup }) {
   const [email, setEmail] = useState('');
@@ -14,7 +14,8 @@ export default function LoginScreen({ onLogin, onSwitchToSignup }) {
 
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      const url = Platform.OS === 'android' ? 'http://10.0.2.2:5000/login' : 'http://localhost:5000/login';
+      const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })

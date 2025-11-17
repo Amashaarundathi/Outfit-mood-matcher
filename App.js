@@ -14,7 +14,7 @@ export default function App() {
   const getRecommendations = async () => {
     setLoading(true);
     try {
-      const url = 'http://localhost:5000/recommend';
+      const url = Platform.OS === 'android' ? 'http://10.0.2.2:5000/recommend' : 'http://localhost:5000/recommend';
       
       const response = await fetch(url, {
         method: "POST",
@@ -68,7 +68,7 @@ export default function App() {
 
       <FlatList
         data={results}
-        keyExtractor={(item) => item.id || item.title}
+        keyExtractor={(item, index) => item.title + index}
         renderItem={({ item }) => (
           <View style={styles.card}>
             <Image source={{ uri: item.image }} style={styles.image} />
